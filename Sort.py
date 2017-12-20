@@ -1,11 +1,4 @@
 
-import random
-import sys
-sys.path.insert(0, '../Data Structures')
-from binary_heap import BinaryHeapArray
-import timeit
-import copy
-
 def mergeSort(items):
 	if len(items) <= 1:
 		return items
@@ -28,22 +21,20 @@ def __mergeSort(items, start, end):
 			sorted.append(second[p2])
 			p2 += 1
 
-	if p1 == len(first):
-		while(p2 < len(second)):
-			sorted.append(second[p2])
-			p2 += 1
-	else:
-		while(p1 < len(first)):
-			sorted.append(first[p1])
-			p1 += 1
+	#Copy uncopied items over
+	while(p2 < len(second)):
+		sorted.append(second[p2])
+		p2 += 1
+	while(p1 < len(first)):
+		sorted.append(first[p1])
+		p1 += 1
 	return sorted
 
 
 def quickSort(items):
 	start = 0
 	end = len(items)
-	sorted = __quickSort(items, start, end)
-	return sorted
+	__quickSort(items, start, end)
 
 def __quickSort(items, start, end):
 	if end - start <= 1:
@@ -55,7 +46,6 @@ def __quickSort(items, start, end):
 	else:
 		__quickSort(items, pivotIndex + 1, end)
 		__quickSort(items, start, pivotIndex)
-	return items
 
 def __quickSortPartition(items, start, end):
 	pivotIndex = end - 1
@@ -66,14 +56,12 @@ def __quickSortPartition(items, start, end):
 		x = items[unexploredIndex]
 		if x < pivot:
 			smallerTailIndex += 1
-			temp = items[smallerTailIndex]
-			items[smallerTailIndex] = items[unexploredIndex]
-			items[unexploredIndex] = temp
+			items[unexploredIndex] = items[smallerTailIndex]
+			items[smallerTailIndex] = x
 		unexploredIndex += 1
 	items[pivotIndex] = items[smallerTailIndex + 1]
-	pivotIndex = smallerTailIndex + 1
-	items[pivotIndex] = pivot
-	return pivotIndex
+	items[smallerTailIndex + 1] = pivot
+	return smallerTailIndex + 1
 
 def selectionSort(itemsToSort):
 	sortedList = []
@@ -86,8 +74,69 @@ def selectionSort(itemsToSort):
 		sortedList.append(minimum)
 	return sortedList
 
+class BasicMaxHeap:
+	def __init__(self, items):
+		self.arr = items
+		self.heapEnd = len(items)
+		self.buildMaxHeap()
+
+	def buildMaxHeap(self):
+		for i in xrange((len(self.arr)-1)//2, -1, -1):
+			self.maxHeapifyDown(i)
+	
+	def maxHeapifyUp(self, i):
+		parentIndex = self.parentIndex(i)
+		while parentIndex is not None:
+			if self.arr[parentIndex] >= self.arr[i]:
+				break
+			temp = self.arr[parentIndex]
+			self.arr[parentIndex] = self.arr[i]
+			self.arr[i] = temp
+			i = parentIndex
+			parentIndex = self.parentIndex(i)
+	
+	def parentIndex(self, i):
+		return (i+1) // 2 - 1 if i != 0 else None
+	
+	def leftChildIndex(self, i):
+		leftChildIdx = i * 2 + 1
+		return leftChildIdx if leftChildIdx < self.heapEnd else None
+	
+	def rightChildIndex(self, i):
+		rightChildIdx = i * 2 + 2
+		return rightChildIdx if rightChildIdx < self.heapEnd else None
+	
+	def maxHeapifyDown(self, i):
+		max = i
+		leftChildIdx = self.leftChildIndex(i)
+		if leftChildIdx is None:
+			return
+		if self.arr[leftChildIdx] > self.arr[i]:
+			max = leftChildIdx
+		rightChildIdx = self.rightChildIndex(i)
+		if rightChildIdx is not None and self.arr[rightChildIdx] > self.arr[i]:
+			max = rightChildIdx
+		if i != max:
+			temp = self.arr[i]
+			self.arr[i] = self.arr[max]
+			self.arr[max] = temp
+			self.maxHeapifyDown(max)
+
+	def extractMax(self):
+		if self.isEmpty():
+			return None
+		max = self.arr[0]
+		self.heapEnd -= 1
+		self.arr[0] = self.arr[self.heapEnd]
+		self.maxHeapifyDown(0)
+		return max
+		
+
+	def isEmpty(self):
+		return self.heapEnd == 0
+
 def heapSort(items):
-	heap = BinaryHeapArray(items)
+	heap = BasicMaxHeap(items)
 	sorted = [None] * len(items)
 	i = len(items) - 1
 	while not heap.isEmpty():
@@ -95,52 +144,3 @@ def heapSort(items):
 		sorted[i] = max
 		i -= 1
 	return sorted
-
-def isSorted(items):
-	for i in xrange(0, len(items)-1):
-		if items[i] > items[i+1]:
-			return False
-	return True
-
-def factorial(number):
-	if number == 1:
-		return 1
-	return number * factorial(number - 1)
-
-if __name__ == "__main__":
-	nums = []
-	for i in xrange(0, 50):
-		x = int(random.random() * 200)
-		nums.append(x)
-	nums1 = copy.deepcopy(nums)
-	nums2 = copy.deepcopy(nums)
-	nums3 = copy.deepcopy(nums)
-	print(nums3)
-
-	start_time = timeit.default_timer()
-	sorted = quickSort(nums3)
-	elapsed = timeit.default_timer() - start_time
-	print(isSorted(sorted))
-	print("Quick Sort: " + str(elapsed))
-	print(sorted)
-
-	start_time = timeit.default_timer()
-	sorted = mergeSort(nums)
-	elapsed = timeit.default_timer() - start_time
-	print(isSorted(sorted))
-	print("Merge Sort: " + str(elapsed))
-	print(sorted)
-
-
-	start_time = timeit.default_timer()
-	sorted = heapSort(nums1)
-	elapsed = timeit.default_timer() - start_time
-	print(isSorted(sorted))
-	print("Heap Sort: " + str(elapsed))
-	print(sorted)
-
-#start_time = timeit.default_timer()
-#	sorted = selectionSort(nums2)
-#	elapsed = timeit.default_timer() - start_time
-#	print(isSorted(sorted))
-#	print("Selection Sort: " + str(elapsed))
