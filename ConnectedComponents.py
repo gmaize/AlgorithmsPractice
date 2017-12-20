@@ -1,3 +1,6 @@
+#Kosaraju's O(V + E) linear time algorithm for partitioning
+#the strongly connected components in a graph (V, E)
+
 import Queue
 
 #V = [v, u, ...], E={v:[u, ...], ...}
