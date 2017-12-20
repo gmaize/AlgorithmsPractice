@@ -111,10 +111,10 @@ class BasicMaxHeap:
 		leftChildIdx = self.leftChildIndex(i)
 		if leftChildIdx is None:
 			return
-		if self.arr[leftChildIdx] > self.arr[i]:
+		if self.arr[max] < self.arr[leftChildIdx]:
 			max = leftChildIdx
 		rightChildIdx = self.rightChildIndex(i)
-		if rightChildIdx is not None and self.arr[rightChildIdx] > self.arr[i]:
+		if rightChildIdx is not None and self.arr[max] < self.arr[rightChildIdx]:
 			max = rightChildIdx
 		if i != max:
 			temp = self.arr[i]
