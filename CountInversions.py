@@ -1,4 +1,4 @@
-import random
+#O(nlogn) algorithm for counting split inversions in a list of rankings
 
 def countInversions(A):
 	count, _ = __countInversions(A, 0, len(A))
