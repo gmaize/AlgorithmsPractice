@@ -10,11 +10,11 @@ def __countInversions(A, start, stop):
 		return 0, A[start:stop]
 	countLeft, sortedLeft = __countInversions(A, start, start + n//2)
 	countRight, sortedRight = __countInversions(A, start + n//2, stop)
-	splitCount, sortedAll = countSplit(sortedLeft, sortedRight)
+	splitCount, sortedAll = __countSplit(sortedLeft, sortedRight)
 	return countLeft + countRight + splitCount, sortedAll
 
 
-def countSplit(sortedLeft, sortedRight):
+def __countSplit(sortedLeft, sortedRight):
 	sortedAll = []
 	i = 0
 	j = 0
@@ -29,18 +29,11 @@ def countSplit(sortedLeft, sortedRight):
 		else:
 			i += 1
 			sortedAll.append(x)
-	if i < len(sortedLeft):
-		while (i < len(sortedLeft)):
-			sortedAll.append(sortedLeft[i])
-			i+=1
-	else:
-		while (j < len(sortedRight)):
-			sortedAll.append(sortedRight[j])
-			j+=1
+	#Copy remaining contents to sorted list
+	while (i < len(sortedLeft)):
+		sortedAll.append(sortedLeft[i])
+		i+=1
+	while (j < len(sortedRight)):
+		sortedAll.append(sortedRight[j])
+		j+=1
 	return inversionsCount, sortedAll
-
-items = []
-for i in xrange(0, 10):
-	items.append(int(random.random() * 10))
-print(items)
-print(countInversions(items))
