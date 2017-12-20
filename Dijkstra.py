@@ -1,5 +1,3 @@
-import random
-
 class MinHeap():
 	def __init__(self, arr=None):
 		if arr is None:
