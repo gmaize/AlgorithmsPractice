@@ -77,3 +77,10 @@ def __closestSplitPair(pX, pY, minDistance, cutoffIndex):
 				p1 = c1
 				p2 = c2
 	return minDistance, p1, p2
+
+
+def pointsSortedByX(points):
+	return sorted(points, key=lambda p: p[0])
+
+def pointsSortedByY(points):
+	return sorted(points, key=lambda p: p[1])
