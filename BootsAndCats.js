@@ -100,3 +100,5 @@ function checkCombination(candidate, combination) {
 }
 
 console.log(generateTestSet())
+
+// [1,   5,   7,  10, 14, 17, 35,  51,  56,  57, 70, 75, 140, 170, 175, 357 ]
